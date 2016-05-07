@@ -60,10 +60,28 @@ Daily_Steps <- with(data,tapply(steps,date,sum))
 
 Daily_Steps <- as.data.frame(Daily_Steps)
 
+#The mean of the total number of steps taken per day
 meanValue <- mean(Daily_Steps$Daily_Steps,na.rm=TRUE)
 
+meanValue
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+#The median of the total number of steps taken per day
 medianValue <- median(Daily_Steps$Daily_Steps,na.rm=TRUE)
 
+medianValue
+```
+
+```
+## [1] 10765
+```
+
+```r
 g <- ggplot(Daily_Steps,aes(x=Daily_Steps))+geom_histogram(bins = 10)
 
 g+geom_vline(aes(xintercept=meanValue),size=1.5,linetype="dashed",colour="red" )+annotate("text", x=meanValue-800,y=7, label= paste("mean = ",round(meanValue)),angle=90,size=8,colour="red")+labs(x="total steps per day",y="",title="histogram of the total number of steps taken each day")
@@ -92,9 +110,28 @@ Steps_time_interval$interval <- as.numeric(row.names(Steps_time_interval))
 
 names(Steps_time_interval) <- c("steps","interval")
 
+# The maximum number of average steps
 max_steps <- max(Steps_time_interval$steps)
+
+max_steps
+```
+
+```
+## [1] 206.1698
+```
+
+```r
+# The corresponding time interval
 time_max_steps <- Steps_time_interval[Steps_time_interval$steps == max_steps,]$interval
 
+time_max_steps
+```
+
+```
+## [1] 835
+```
+
+```r
 #prepare plot
 
 ann_text <- paste("maximum ",round(max_steps)," steps at ",round(time_max_steps/100),":",time_max_steps-round(time_max_steps/100)*100," am")
@@ -122,10 +159,20 @@ g + scale_x_continuous(breaks=x_axis,labels=format(time_axis,"%H:%M"))+theme(axi
 ####There are 2304 rows with missing "steps" value
 
 
-#### replace missing data using average steps by each time interval
+### replace missing data using average steps by each time interval
 
 ```r
 # replace missing data using average steps by time interval 
+
+# number of rows with missing data in steps
+sum(is.na(data$steps))
+```
+
+```
+## [1] 2304
+```
+
+```r
 data_NonNA <- merge(data,Steps_time_interval,by.x="interval",by.y="interval")
 
 data_NonNA<-data_NonNA[order(data_NonNA$date,data_NonNA$interval),] 
@@ -161,15 +208,43 @@ head(data_NonNA)
 ```
 
 ```r
+# after removing missing data 
+# number of rows with missing data in steps now
+sum(is.na(data_NonNA$steps))
+```
+
+```
+## [1] 0
+```
+
+```r
 Daily_Steps_NonNA <- with(data_NonNA,tapply(steps,date,sum))
 
 Daily_Steps_NonNA <- as.data.frame(Daily_Steps_NonNA)
 
+# recalculate The mean of the total number of steps taken per day
 meanValue <- mean(Daily_Steps_NonNA$Daily_Steps_NonNA)
+
+meanValue 
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+# recalculate The median of the total number of steps taken per day
 
 medianValue <- median(Daily_Steps_NonNA$Daily_Steps_NonNA)
 
+medianValue 
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 g <- ggplot(Daily_Steps_NonNA,aes(x=Daily_Steps_NonNA))+geom_histogram(bins = 12)
 
 g+geom_vline(aes(xintercept=meanValue),size=1.5,linetype="dashed",colour="blue" )+annotate("text", x=meanValue-800,y=9, label= paste("mean / median = ",round(meanValue)),angle=90,size=8,colour="blue")+labs(x="total steps per day",y="",title="histogram of the total number of steps taken each day \n with missing step values replaced by \n average steps taken in the corresponding time interval")
@@ -181,7 +256,7 @@ g+geom_vline(aes(xintercept=meanValue),size=1.5,linetype="dashed",colour="blue" 
 
 ####The median of the total number of steps taken per day is 10766
 
-####It shows that the mean and median value have not changed after replacing the missing values using the average steps by time interval
+####It shows that the mean and median value have no significant change after replacing the missing values using the average steps by time interval
 
 
 
