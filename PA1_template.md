@@ -1,6 +1,6 @@
 # Reproducible Research: Peer Assessment 1
 Dexter Wang  
-`r format(Sys.time(), '%d/%m/%Y')`  
+08/05/2016  
 
 
 ## Loading and preprocessing the data
